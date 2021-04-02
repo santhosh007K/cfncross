@@ -1,0 +1,14 @@
+- hosts: localhost
+  tasks:
+  - name: create a cloudformation stack
+    amazon.aws.cloudformation:
+      stack_name: "SampleNetworkCrossStack"
+      state: "present"
+      region: "ap-south-1"
+      disable_rollback: true
+      template: "SampleNetworkCrossStack.template"
+	    template_parameters:
+	      VPCCIDR: "172.21.1.0/24"
+	      PublicSubnet1: "172.21.1.0/26"
+      tags:
+        Stack: "ansible-cloudformation-vpc"
