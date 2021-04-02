@@ -7,8 +7,8 @@
       region: "ap-south-1"
       disable_rollback: true
       template: "SampleNetworkCrossStack.template"
-	    template_parameters:
-	      VPCCIDR: "172.21.1.0/24"
-	      PublicSubnet1: "172.21.1.0/26"
+      template_parameters:
+        VPCCIDR: "172.21.1.0/24"
+        PublicSubnet1: "172.21.1.0/26"
       tags:
         Stack: "ansible-cloudformation-vpc"
