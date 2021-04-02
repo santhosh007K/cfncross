@@ -2,13 +2,10 @@
   tasks:
   - name: create a cloudformation stack
     amazon.aws.cloudformation:
-      stack_name: "ansible-cloudformation-ec2-vpc"
+      stack_name: "SampleWebAppCrossStack"
       state: "present"
       region: "ap-south-1"
       disable_rollback: true
-      template: "VPC_Single_Instance_In_Subnet.yml"
-      template_parameters:
-        KeyName: "basil-mum-newkey"
-        InstanceType: "t2.micro"
+      template: "SampleWebAppCrossStack.template"
       tags:
         Stack: "ansible-cloudformation"
