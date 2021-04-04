@@ -167,6 +167,30 @@ Resources:
       Source:
         Type: GITHUB
         Location: https://github.com/santhosh007K/cfncross.git
+        BuildSpec:
+          Fn::Sub: |
+            Version: 0.2
+            Phases:
+              install:
+                runtime-versions:
+                  python: 3.8
+                commands:
+                  # - export PYTHON_INTERPRETER=$(pyenv which python3)
+                  - export PYTHON_INTERPRETER="/usr/local/bin/python3"
+                  - echo $PYTHON_INTERPRETER
+              pre_build:
+                commands:
+                  - pip3 install --upgrade pip
+                  - pip3 install requests[security]
+                  - pip3 install ansible
+                  - pip3 install boto
+                  - pip3 install boto3
+                  - pip3 install --upgrade --force-reinstall boto3
+                  - pip3 install --upgrade --force-reinstall awscli
+                  - pip3 install curl jq
+              build:
+                commands:
+                  - ansible --version
   ec2deployProject:
     Type: AWS::CodeBuild::Project
     DependsOn: CodeBuildRole
