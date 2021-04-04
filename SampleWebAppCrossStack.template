@@ -68,7 +68,7 @@
         }
       },
       "Properties": {
-        "InstanceType"   : "t2.micro",
+        "InstanceType"   : "t2.medium",
         "ImageId": { "Fn::FindInMap": [ "AWSRegionArch2AMI", { "Ref": "AWS::Region" } , "HVM64" ] },
         "NetworkInterfaces" : [{
           "GroupSet"                 : [{ "Fn::ImportValue" :  {"Fn::Sub": "${NetworkStackName}-SecurityGroupID" } }],
