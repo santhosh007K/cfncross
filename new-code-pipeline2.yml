@@ -191,7 +191,6 @@ Resources:
               build:
                 commands:
                   - ansible --version
-                  - cd cfncross
                   - ansible-playbook cloudform-ec2.yml -e "ansible_python_interpreter=$PYTHON_INTERPRETER"
 
   ec2deployProject:
