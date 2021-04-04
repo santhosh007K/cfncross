@@ -64,6 +64,11 @@ Resources:
             Resource: "*"
             Effect: Allow
           - Action:
+            - codebuild:BatchGetBuilds
+            - codebuild:StartBuild
+            Resource: "*"
+            Effect: Allow
+          - Action:
             - elasticbeanstalk:*
             - ec2:*
             - elasticloadbalancing:*
