@@ -112,7 +112,7 @@ Resources:
               Version: 1 
               Provider: GitHub
             OutputArtifacts:
-            - Name: staticwebsite
+            - Name: my-app-inputart
             Configuration:
               Owner: !Ref GitHubOwner
               Repo: !Ref GitHubRepo
@@ -127,9 +127,9 @@ Resources:
                 Version: 1
                 Provider: CodeBuild
             OutputArtifacts:
-              - Name: !Ref ArtifactStore
+              - Name: my-app-outputart 
             InputArtifacts:
-              - Name: !Ref ArtifactStore
+              - Name: my-app-inputart
             Configuration:
                 ProjectName: !Ref CodeBuildJavaProject
             RunOrder: 1
