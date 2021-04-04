@@ -112,7 +112,7 @@ Resources:
               Version: 1 
               Provider: GitHub
             OutputArtifacts:
-            - Name: my-app-inputart
+            - Name: source-artifact-output-1
             Configuration:
               Owner: !Ref GitHubOwner
               Repo: !Ref GitHubRepo
@@ -126,14 +126,28 @@ Resources:
                 Owner: AWS
                 Version: 1
                 Provider: CodeBuild
-            OutputArtifacts:
-              - Name: my-app-outputart 
             InputArtifacts:
-              - Name: my-app-inputart
+              - Name: source-artifact-output-1
+            OutputArtifacts:
+              - Name: build-artifact-output-2
             Configuration:
-                ProjectName: !Ref CodeBuildJavaProject
+                ProjectName: !Ref CodeBuildcopysourceProject
             RunOrder: 1
-  CodeBuildJavaProject:
+        - Name: ec2deploy
+          Actions:
+            - Name: "ec2deploy"
+              InputArtifacts:
+                - Name: build-artifact-output-2
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: "1"
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref ec2deployProject
+              RunOrder: 2
+
+  CodeBuildcopysourceProject:
     Type: AWS::CodeBuild::Project
     DependsOn: CodeBuildRole
     Properties:
@@ -146,14 +160,62 @@ Resources:
       Name: !Sub ${AWS::StackName}CodeBuildJavaProject
       ServiceRole: !Ref CodeBuildRole
       Source:
-        Type: CODECOMMIT
-        Location:
-          Fn::Join:
-            - ""
-            - - "https://git-codecommit."
-              - Ref: AWS::Region
-              - ".amazonaws.com/v1/repos/"
-              - Ref: AWS::StackName
+        Type: GITHUB
+        Location: https://github.com/santhosh007K/cfncross.git
+  ec2deployProject:
+    Type: AWS::CodeBuild::Project
+    DependsOn: CodeBuildRole
+    Properties:
+      Artifacts:
+        Type: "CODEPIPELINE"
+      Source:
+        Type: "CODEPIPELINE"
+        BuildSpec:
+          Fn::Sub: |
+            Version: 0.2
+            Phases:
+              install:
+                runtime-versions:
+                  python: 3.8
+                commands:
+                  # - export PYTHON_INTERPRETER=$(pyenv which python3)
+                  - export PYTHON_INTERPRETER="/usr/local/bin/python3"
+                  - echo $PYTHON_INTERPRETER
+              pre_build:
+                commands:
+                  - pip3 install --upgrade pip
+                  - pip3 install requests[security]
+                  - pip3 install ansible
+                  - pip3 install boto
+                  - pip3 install boto3
+                  - pip3 install --upgrade --force-reinstall boto3
+                  - pip3 install --upgrade --force-reinstall awscli
+                  - pip3 install curl jq
+              build:
+                commands:
+                  - ansible --version
+                  - cd cfncross
+                  - ansible-playbook cloudform-ec2.yml -e "ansible_python_interpreter=$PYTHON_INTERPRETER"
+                  
+      Environment:
+        ComputeType: "BUILD_GENERAL1_SMALL"
+        Image: "aws/codebuild/amazonlinux2-x86_64-standard:2.0-19.11.26"
+        #Image: "aws/codebuild/amazonlinux2-x86_64-standard:2.0"
+        Type: "LINUX_CONTAINER"
+        EnvironmentVariables:
+          - Name: AWS_DEFAULT_REGION
+            Value: !Ref AWS::Region
+      #VpcConfig:
+      #  VpcId:
+      #    Fn::ImportValue: !Sub "${VPCStackName}-VPCID"
+      #  Subnets:
+      #  - Fn::ImportValue: !Sub "${VPCStackName}-SubnetPrivateA"
+      #  - Fn::ImportValue: !Sub "${VPCStackName}-SubnetPrivateB"
+      #  - Fn::ImportValue: !Sub "${VPCStackName}-SubnetPrivateC"
+      #  SecurityGroupIds:
+      #  - !Ref CodeBuildSecurityGroup
+      ServiceRole: !GetAtt CodeBuildRole.Arn
+  
 
   CodeBuildRole:
     Type: AWS::IAM::Role
