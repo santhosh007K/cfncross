@@ -94,6 +94,7 @@ Resources:
             - opsworks:UpdateStack
             Resource: "*"
             Effect: Allow
+  
   CodePipeline:
     Type: "AWS::CodePipeline::Pipeline"
     Properties:
@@ -117,3 +118,52 @@ Resources:
               Repo: !Ref GitHubRepo
               Branch: master
               OAuthToken: !Ref GitHubOAuthToken
+        - Name: Build
+          Actions:
+          - Name: Build
+            ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+            OutputArtifacts:
+              - Name: !Ref ArtifactStore
+            InputArtifacts:
+              - Name: !Ref ArtifactStore
+            Configuration:
+                ProjectName: !Ref CodeBuildJavaProject
+            RunOrder: 1
+  CodeBuildJavaProject:
+    Type: AWS::CodeBuild::Project
+    DependsOn: CodeBuildRole
+    Properties:
+      Artifacts:
+        Type: no_artifacts
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/java:openjdk-8
+        Type: LINUX_CONTAINER
+      Name: !Sub ${AWS::StackName}CodeBuildJavaProject
+      ServiceRole: !Ref CodeBuildRole
+      Source:
+        Type: CODECOMMIT
+        Location:
+          Fn::Join:
+            - ""
+            - - "https://git-codecommit."
+              - Ref: AWS::Region
+              - ".amazonaws.com/v1/repos/"
+              - Ref: AWS::StackName
+
+  CodeBuildRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          Effect: Allow
+          Principal:
+            Service: codebuild.amazonaws.com
+          Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AdministratorAccess
