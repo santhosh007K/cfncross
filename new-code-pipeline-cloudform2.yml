@@ -3,13 +3,14 @@
   - name: create a cloudformation stack
     amazon.aws.cloudformation:
       stack_name: "SampleNetworkCrossStack"
+      create_changeset: true
       state: "present"
       region: "ap-south-1"
       disable_rollback: true
       template: "new-code-pipeline2.yml"
       template_parameters:
         GitHubOwner: Santhosh
-        GitHubOAuthToken: 728114c5c5fce6ab86e5f1fc90becabffef965eb
+        #GitHubOAuthToken: 728114c5c5fce6ab86e5f1fc90becabffef965eb
         GitHubRepo: cfncross
       tags:
         Stack: "ansible-cloudformation-vpc"
