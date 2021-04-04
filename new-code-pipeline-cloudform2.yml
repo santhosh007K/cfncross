@@ -1,0 +1,15 @@
+- hosts: localhost
+  tasks:
+  - name: create a cloudformation stack
+    amazon.aws.cloudformation:
+      stack_name: "SampleNetworkCrossStack"
+      state: "present"
+      region: "ap-south-1"
+      disable_rollback: true
+      template: "new-code-pipeline2.yml"
+      template_parameters:
+        GitHubOwner:
+        GitHubOAuthToken:
+        GitHubRepo:
+      tags:
+        Stack: "ansible-cloudformation-vpc"

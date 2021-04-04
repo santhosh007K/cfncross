@@ -99,5 +99,6 @@
       "Value" :  { "Fn::GetAtt" : ["WebServerSecurityGroup", "GroupId"] },
       "Export" : { "Name" : {"Fn::Sub": "${AWS::StackName}-SecurityGroupID" }}
     }
+    
   }
 }

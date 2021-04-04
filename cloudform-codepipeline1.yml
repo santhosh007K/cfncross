@@ -1,0 +1,17 @@
+- hosts: localhost
+  tasks:
+  - name: create a cloudformation stack
+    amazon.aws.cloudformation:
+      stack_name: "ansible-cloudformation-codepipeline"
+      state: "present"
+      region: "ap-south-1"
+      disable_rollback: true
+      template: "codepipeline-cfn-custom.yml"
+      template_parameters:
+        CFNTemplateRepoName: "cfn-nested-repo"
+        InsValidateResourcesRepoNametanceType: "validate-resources"
+        UATTopic: "NestedCFN-BaseStack-UATTopic-1KS5OZJMMXVNW"
+        ProdTopic: "NestedCFN-BaseStack-ProdTopic-1JKD5WA69J03G"
+        ArtifactStoreS3Location: "nestedcfn-basestack-s3bucket-18b4ta1mcfniy"
+      tags:
+        Stack: "ansible-cloudformation"
