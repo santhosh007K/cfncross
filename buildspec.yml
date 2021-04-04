@@ -7,13 +7,13 @@ Phases:
       - export PYTHON_INTERPRETER=$(pyenv which python3)
   pre_build:
     commands:
-      - pip3 install --upgrade pip
-      - pip3 install requests[security]
-      - pip3 install ansible
-      - pip3 install boto
-      - pip3 install boto3
-      - yum clean all
-      - yum -y install curl
+      #- pip3 install --upgrade pip
+      #- pip3 install requests[security]
+      #- pip3 install ansible
+      #- pip3 install boto
+      #- pip3 install boto3
+      #- yum clean all
+      #- yum -y install curl
       - yum -y install jq
       - ansible-galaxy collection install amazon.aws
   build:
