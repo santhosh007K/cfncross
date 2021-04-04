@@ -9,7 +9,7 @@
       disable_rollback: true
       template: "new-code-pipeline2.yml"
       template_parameters:
-        GitHubOwner: Santhosh
+        GitHubOwner: santhosh007k
         GitHubOAuthToken: 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
         GitHubRepo: cfncross
       tags:
