@@ -138,19 +138,19 @@ Resources:
             Configuration:
                 ProjectName: !Ref CodeBuildcopysourceProject
             RunOrder: 1
-        - Name: ec2deploy
-          Actions:
-            - Name: "ec2deploy"
-              InputArtifacts:
-                - Name: build-artifact-output-2
-              ActionTypeId:
-                Category: Build
-                Owner: AWS
-                Version: "1"
-                Provider: CodeBuild
-              Configuration:
-                ProjectName: !Ref ec2deployProject
-              RunOrder: 2
+        #- Name: ec2deploy
+        #  Actions:
+        #    - Name: "ec2deploy"
+        #      InputArtifacts:
+        #       - Name: build-artifact-output-2
+        #    ActionTypeId:
+        #        Category: Build
+        #        Owner: AWS
+        #        Version: "1"
+        #        Provider: CodeBuild
+        #      Configuration:
+        #        ProjectName: !Ref ec2deployProject
+        #      RunOrder: 2
 
   CodeBuildcopysourceProject:
     Type: AWS::CodeBuild::Project
@@ -191,6 +191,9 @@ Resources:
               build:
                 commands:
                   - ansible --version
+                  - cd cfncross
+                  - ansible-playbook cloudform-ec2.yml -e "ansible_python_interpreter=$PYTHON_INTERPRETER"
+
   ec2deployProject:
     Type: AWS::CodeBuild::Project
     DependsOn: CodeBuildRole
