@@ -1,0 +1,25 @@
+Version: 0.2
+Phases:
+  install:
+    runtime-versions:
+      python: 3.8
+    commands:
+      - export PYTHON_INTERPRETER=$(pyenv which python3)
+  pre_build:
+    commands:
+      - pip3 install --upgrade pip
+      - pip3 install requests[security]
+      - pip3 install ansible
+      - pip3 install boto
+      - pip3 install boto3
+      - yum clean all
+      - yum -y install curl
+      - yum -y install jq
+      - ansible-galaxy collection install amazon.aws
+  build:
+    commands:
+      #- chmod 600 ec2.yaml
+      #- ansible-playbook ec2.yaml
+      #- chmod 600 codebuild.yml
+      #- ansible-playbook codebuild.yml##
+      #- chmod 600 cloudform.yml
