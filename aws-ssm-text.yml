@@ -1,0 +1,8 @@
+- hosts: localhost
+  tasks:
+  - name: Create or update secure key/value pair with default kms key (aws/ssm)
+    community.aws.aws_ssm_parameter_store:
+      name: "Hello"
+      description: "This is your first key"
+      string_type: "SecureString"
+      value: "World"
