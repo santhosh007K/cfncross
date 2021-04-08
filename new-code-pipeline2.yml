@@ -172,7 +172,7 @@ Resources:
         #Type: GITHUB
         #Location: https://github.com/santhosh007K/cfncross.git
       Source:
-        type: CODEPIPELINE
+        Type: CODEPIPELINE
         BuildSpec:
           Fn::Sub: |
             Version: 0.2
