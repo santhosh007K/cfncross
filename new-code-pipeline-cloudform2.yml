@@ -1,6 +1,6 @@
 - hosts: localhost
   vars:
-    git-token: "{{ lookup('amazon.aws.aws_ssm', 'GitHubOAuthToken') }}"
+    git_token: "{{ lookup('amazon.aws.aws_ssm', 'GitHubOAuthToken') }}"
   tasks:
   - name: recommend to use with aws_ssm lookup plugin
     ansible.builtin.debug:
@@ -16,7 +16,7 @@
       template_parameters:
         GitHubOwner: santhosh007k
         #GitHubOAuthToken: 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
-        git-token: {{git-token}}
+        git-token: "{{git_token}}"
         GitHubRepo: cfncross
       tags:
         Stack: "ansible-cloudformation-vpc"
