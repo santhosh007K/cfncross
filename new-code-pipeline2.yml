@@ -108,9 +108,9 @@ Resources:
         Type: S3
       RoleArn: !Sub '${CodePipelineIAMRole.Arn}'
       Stages:
-        - Name: Source
+        - Name: Get_source
           Actions: 
-          - Name: Source
+          - Name: Git_pull
             ActionTypeId:
               Category: Source 
               Owner: ThirdParty 
@@ -138,6 +138,7 @@ Resources:
             Configuration:
                 ProjectName: !Ref CodeBuildcopysourceProject
             RunOrder: 1
+      
         #- Name: ec2deploy
         #  Actions:
         #    - Name: "ec2deploy"
@@ -162,11 +163,16 @@ Resources:
         ComputeType: BUILD_GENERAL1_SMALL
         Image: aws/codebuild/amazonlinux2-x86_64-standard:2.0-19.11.26
         Type: LINUX_CONTAINER
+        EnvironmentVariables:
+          - Name: AWS_DEFAULT_REGION
+            Value: !Ref AWS::Region
       Name: !Sub ${AWS::StackName}CodeBuildJavaProject
       ServiceRole: !Ref CodeBuildRole
+      #Source:
+        #Type: GITHUB
+        #Location: https://github.com/santhosh007K/cfncross.git
       Source:
-        Type: GITHUB
-        Location: https://github.com/santhosh007K/cfncross.git
+        type: CODEPIPELINE
         BuildSpec:
           Fn::Sub: |
             Version: 0.2
@@ -226,8 +232,7 @@ Resources:
                 commands:
                   - ansible --version
                   - cd cfncross
-                  - ansible-playbook cloudform-ec2.yml -e "ansible_python_interpreter=$PYTHON_INTERPRETER"
-                  
+                  - ansible-playbook cloudform-ec2.yml -e "ansible_python_interpreter=$PYTHON_INTERPRETER"         
       Environment:
         ComputeType: "BUILD_GENERAL1_SMALL"
         Image: "aws/codebuild/amazonlinux2-x86_64-standard:2.0-19.11.26"
