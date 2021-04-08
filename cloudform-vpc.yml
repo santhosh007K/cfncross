@@ -1,4 +1,6 @@
 - hosts: localhost
+  vars:
+    net-cidr: "{{ lookup('amazon.aws.aws_ssm', 'netcidr') }}"
   tasks:
   - name: create a cloudformation stack
     amazon.aws.cloudformation:
@@ -8,7 +10,8 @@
       disable_rollback: true
       template: "SampleNetworkCrossStack.template"
       template_parameters:
-        VPCCIDR: "172.21.1.0/24"
+        #VPCCIDR: "172.21.1.0/24"
+        VPCCIDR: "{{net-cidr}}"
         PublicSubnet1: "172.21.1.0/26"
       tags:
         Stack: "ansible-cloudformation-vpc"
