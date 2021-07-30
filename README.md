@@ -7,7 +7,7 @@ execution command : ansible-playbook cloudform-codepipeline1.yml
 **#2sample ansible code to create vpc using cloudformation
 
 cloudform-vpc.yml  is used to create codepiple using cloudformations and it is referncing  SampleNetworkCrossStack.template
-execution command : ansible-playbook cloudform-codepipeline1.yml
+execution command : ansible-playbook cloudform-vpc.yml
 
 
 **#3sample ansible code to create ec2 by crossrefer vpc in above stack using cloudformation**
